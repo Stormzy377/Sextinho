@@ -75,6 +75,16 @@ export function Home(){
     }
   }
 
+  async function handleToggleItemStatus(id: string) {
+    try {
+      await itemsStorage.toggleStatus(id)
+      await itemsByStatus()
+    } catch (error) {
+      console.log(error)
+      Alert.alert("Erro", "Nã foi possível atualizar o status.")
+    }
+  }
+
   useEffect(() => {
     itemsByStatus()
   }, [filter])
@@ -115,7 +125,7 @@ export function Home(){
             <Item
               // A flatList não precisa da propriedade key, ela já gerencia isso internamente
               data={item}
-              onStatus={() => console.log("muda o status")}
+              onStatus={() => handleToggleItemStatus(item.id)}
               onRemove={() => handleRemove(item.id)}
             />
           )}
