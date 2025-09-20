@@ -10,7 +10,7 @@ type Props = TouchableOpacityProps & {
 // Aqi aplicamos as propriedades que queremos que o componente Button receba (usamos uma propriedade dentro de um componente)
 export function Button({ title, ...rest}: Props){
   return(
-    <TouchableOpacity style={styles.container} activeOpacity={0.7}>
+    <TouchableOpacity style={styles.container} activeOpacity={0.7} {...rest}>
       <Text style={styles.title}>
         {title}
       </Text>
