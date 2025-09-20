@@ -31,10 +31,10 @@ export function Home(){
     }
 
     await itemsStorage.add(newItem)
-    // await itemsByStatus()
+    await itemsByStatus()
 
-    setFilter(FilterStatus.PENDING);
     Alert.alert("Adicionado", `Adicionado ${description}`)
+    setFilter(FilterStatus.PENDING);
     setDescription("")
   }
 
@@ -48,6 +48,16 @@ export function Home(){
     }
   }
 
+  async function handleRemove(id: string) {
+    try {
+      await itemsStorage.remove(id)
+      await itemsByStatus()
+    } catch (error) {
+      console.log(error)
+      Alert.alert("Remover", "Não foi possível remover." )
+    }
+  }
+
   useEffect(() => {
     itemsByStatus()
   }, [filter])
@@ -57,19 +67,22 @@ export function Home(){
       <Image source={require("@/assets/logo.png")} style={styles.logo} />
 
       <View style={styles.form}>
-        <Input placeholder="O que você precisa comprar?" onChangeText={setDescription} 
-         value={description}/>
-        <Button title="Adicionar" onPress={handleAdd}/>
+        <Input
+          placeholder="O que você precisa comprar?"
+          onChangeText={setDescription}
+          value={description}
+        />
+        <Button title="Adicionar" onPress={handleAdd} />
       </View>
 
       <View style={styles.content}>
         <View style={styles.header}>
           {FILTER_STATUS.map((status) => (
-            <Filter 
-            key={status} 
-            status={status} 
-            isActive={status === filter}
-            onPress={() => setFilter(status)}
+            <Filter
+              key={status}
+              status={status}
+              isActive={status === filter}
+              onPress={() => setFilter(status)}
             />
           ))}
 
@@ -86,13 +99,15 @@ export function Home(){
               // A flatList não precisa da propriedade key, ela já gerencia isso internamente
               data={item}
               onStatus={() => console.log("muda o status")}
-              onRemove={() => console.log("Apagar")}
+              onRemove={() => handleRemove(item.id)}
             />
           )}
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           contentContainerStyle={styles.listContent}
-          ListEmptyComponent={() => <Text style={styles.empty}>Nenhum produto adicionado</Text>}
+          ListEmptyComponent={() => (
+            <Text style={styles.empty}>Nenhum produto adicionado</Text>
+          )}
         />
       </View>
     </View>
