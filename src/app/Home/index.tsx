@@ -21,7 +21,7 @@ export function Home(){
   // função para adicionar item
   async function handleAdd(){
     if(!description.trim()){
-      return Alert.alert("Adicionar", "Informe a descrição para adicionar")
+      return Alert.alert("Adicionar", "Você precisa adicionar um item a lista!")
     }
 
     const newItem = {
@@ -44,7 +44,7 @@ export function Home(){
       setItems(response)
     } catch (error) {
       console.log(error)
-      Alert.alert("Erro", "Não foi possível carregar os itens")
+      Alert.alert("Erro", "Não foi possível carregar os itens.")
     }
   }
 
@@ -55,6 +55,23 @@ export function Home(){
     } catch (error) {
       console.log(error)
       Alert.alert("Remover", "Não foi possível remover." )
+    }
+  }
+
+  function handleClear() {
+    Alert.alert("Limpar", "Deseja apagar a lista de compras?",[
+      { text: "Não", style: "cancel"},
+      { text: "Sim", onPress: () => onClear()}
+    ])
+  }
+
+  async function onClear() {
+    try {
+      await itemsStorage.clear()
+      setItems([])
+    } catch (error){
+      console.log(error)
+      Alert.alert("Erro", 'Não foi possível limpar a lista.')
     }
   }
 
@@ -86,7 +103,7 @@ export function Home(){
             />
           ))}
 
-          <TouchableOpacity style={styles.clearButton}>
+          <TouchableOpacity style={styles.clearButton} onPress={handleClear}>
             <Text style={styles.clearText}>Limpar</Text>
           </TouchableOpacity>
         </View>
